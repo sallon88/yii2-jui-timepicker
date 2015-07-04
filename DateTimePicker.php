@@ -63,13 +63,13 @@ class DateTimePicker extends DatePicker
                 $view->registerJsFile(
                     $bundle->baseUrl . "/dist/i18n/jquery-ui-timepicker-$language.js",
                     [
-                        'depends' => [JuiAsset::className()],
+                        'depends' => [DateTimePickerAsset::className()],
                     ]
                 );
             }
             $options = Json::encode($this->clientOptions);
             $view->registerJs(
-                "$('#{$containerID}').{$picker}($.extend({}, $.{$picker}.regional['{$language}'], $options));"
+                "$('#{$containerID}').{$picker}($.extend({}, $.timepicker.regional['{$language}'], $options));"
             );
         } else {
             $this->registerClientOptions($picker, $containerID);
