@@ -12,6 +12,7 @@ use yii\helpers\Json;
 use yii\jui\DatePicker;
 use yii\jui\JuiAsset;
 use yii\helpers\FormatConverter;
+use yii\helpers\Html;
 
 /**
  * @author Aris Karageorgos <aris@phe.me>
