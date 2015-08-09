@@ -24,6 +24,11 @@ class DateTimePicker extends DatePicker
     public $timeOnly = false;
 
     /**
+     *  see http://trentrichardson.com/examples/timepicker/
+     */
+    public $timeFormat = '';
+
+    /**
      * Renders the widget.
      */
     public function run()
@@ -47,6 +52,10 @@ class DateTimePicker extends DatePicker
                 'date',
                 $language
             );
+        }
+
+        if ($this->timeFormat) {
+            $this->clientOptions['timeFormat'] = $this->timeFormat;
         }
 
         if ($language != 'en-US' && $language != 'en') {
@@ -77,5 +86,41 @@ class DateTimePicker extends DatePicker
 
         $this->registerClientEvents($picker, $containerID);
         DateTimePickerAsset::register($this->getView());
+    }
+
+    protected function renderWidget()
+    {
+        $contents = [];
+
+        // get formatted date value
+        if ($this->hasModel()) {
+            $value = Html::getAttributeValue($this->model, $this->attribute);
+        } else {
+            $value = $this->value;
+        }
+
+        $options = $this->options;
+        $options['value'] = $value;
+
+        if ($this->inline === false) {
+            // render a text input
+            if ($this->hasModel()) {
+                $contents[] = Html::activeTextInput($this->model, $this->attribute, $options);
+            } else {
+                $contents[] = Html::textInput($this->name, $value, $options);
+            }
+       } else {
+            // render an inline date picker with hidden input
+            if ($this->hasModel()) {
+                $contents[] = Html::activeHiddenInput($this->model, $this->attribute, $options);
+            } else {
+                $contents[] = Html::hiddenInput($this->name, $value, $options);
+            }
+            $this->clientOptions['defaultDate'] = $value;
+            $this->clientOptions['altField'] = '#' . $this->options['id'];
+            $contents[] = Html::tag('div', null, $this->containerOptions);
+        }
+
+        return implode("\n", $contents);
     }
 }
